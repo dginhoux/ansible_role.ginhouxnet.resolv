@@ -1,0 +1,91 @@
+---
+# force legacy mode if not using systemd
+- set_fact:
+    resolv_mode: legacy
+  when: ansible_service_mgr != "systemd"
+
+
+- name: get existing /etc/resolv.conf file info
+  ansible.builtin.stat:
+    path: /etc/resolv.conf
+  register: sym
+
+
+- block:
+  - name: disbale systemd-resolved
+    systemd:
+      name: systemd-resolved.service
+      state: stopped
+      force: yes
+      daemon_reload: yes
+      enabled: no
+      masked: yes
+    when: ansible_service_mgr == "systemd"
+
+  - name: delete existing /etc/resolv.conf link
+    file:
+      path: /etc/resolv.conf
+      state: absent
+      force: yes
+    when: sym.stat.islnk is defined and sym.stat.islnk
+
+  - name: create legacy /etc/resolv.conf file
+    template:
+      src: resolv.conf.j2
+      dest: /etc/resolv.conf
+      mode: 0644
+      owner: root
+      group: root
+  when: resolv_mode == "legacy"
+
+
+- block:
+  - name: create systemd-resolved drop-in dir
+    ansible.builtin.file:
+      path: /etc/systemd/resolved.conf.d
+      state: directory
+      mode: 0755
+      owner: root
+      group: root
+
+  - name: create systemd-resolved config file
+    template:
+      src: resolved.conf.j2
+      dest: /etc/systemd/resolved.conf.d/resolved.conf
+      mode: 0644
+      owner: root
+      group: root
+
+  - name: delete legacy /etc/resolv.conf file
+    file:
+      path: /etc/resolv.conf
+      state: absent
+      force: yes
+    when: sym.stat.isreg is defined and sym.stat.isreg
+
+  - name: enable systemd-resolved.service
+    systemd:
+      name: systemd-resolved.service
+      state: started
+      force: yes
+      daemon_reload: yes
+      enabled: yes
+      masked: no
+    when: ansible_service_mgr == "systemd"
+
+  - name: create symlink /etc/resolv.conf to /run/systemd/resolve/resolv.conf
+    ansible.builtin.file:
+      src: /run/systemd/resolve/resolv.conf
+      dest: /etc/resolv.conf
+      owner: root
+      group: root
+      state: link
+
+  - name: restart systemd-resolved
+    systemd:
+      name: systemd-resolved.service
+      state: restarted
+      force: yes
+      daemon_reload: yes
+    when: ansible_service_mgr == "systemd"
+  when: resolv_mode == "resolved"

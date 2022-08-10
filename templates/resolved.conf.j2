@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+
+[Resolve]
+{% if resolv_nameservers is defined and resolv_nameservers | length > 0 %}
+DNS={{ resolv_nameservers | join(' ') }}
+{% else %}
+DNS=
+{% endif %}
+{% if resolv_domain is defined and resolv_domain != "" %}
+Domains={{ resolv_domain }}
+{% else %}
+Domains=
+{% endif %}
+FallbackDNS=127.0.0.53
+DNSSEC=no
+DNSOverTLS=no
+MulticastDNS=no
+LLMNR=resolve
+Cache=yes
+CacheFromLocalhost=no
+DNSStubListener=no
+DNSStubListenerExtra=
+ReadEtcHosts=yes
+ResolveUnicastSingleLabel=no
