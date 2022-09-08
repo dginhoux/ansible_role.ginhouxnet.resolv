@@ -1,7 +1,7 @@
 ---
 
 galaxy_info:
-  role_name: ginhouxnet.resolv
+  role_name: resolv
   description: configure dns resolver
   author: dginhoux
   company: ginhouxnet
