@@ -14,8 +14,7 @@ This role is built to only run on platforms defined in `meta/main.yml`
 Role Variables
 --------------
 
-
-```
+```yaml
 resolv_mode: legacy
 # resolv_mode: resolved
 
