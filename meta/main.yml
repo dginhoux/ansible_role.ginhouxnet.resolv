@@ -1,5 +1,4 @@
 ---
-
 galaxy_info:
   role_name: resolv
   description: configure dns resolver
@@ -26,6 +25,5 @@ galaxy_info:
     - resolver
     - dns
     - nameserver
-
 
 dependencies: []
