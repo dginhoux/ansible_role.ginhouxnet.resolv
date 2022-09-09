@@ -8,7 +8,7 @@ It can be used to configure both legacy /etc/resolv.conf or systemd resolvd
 Requirements
 ------------
 
-This ansible role will only run on identified OS defined on meta/main.yml
+This role is built to only run on platforms defined in `meta/main.yml`
 
 
 Role Variables
@@ -29,8 +29,7 @@ resolv_search: []
 Dependencies
 ------------
 
-
-
+none
 
 Example Playbook
 ----------------
@@ -46,4 +45,4 @@ BSD
 Author Information
 ------------------
 
-Dany GINHOUX
+https://github.com/dginhoux/
