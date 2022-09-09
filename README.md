@@ -2,7 +2,7 @@ ginhouxnet.resolv
 =========
 
 This ansible role configure DNS resolver.
-It can be used to configure both legacy /etc/resolv.conf or systemd resolvd
+It can be used to configure both legacy `/etc/resolv.conf` or systemd resolvd
 
 
 Requirements
@@ -14,7 +14,6 @@ This role is built to only run on platforms defined in `meta/main.yml`
 Role Variables
 --------------
 
-It's just a simple list like : 
 
 ```
 resolv_mode: legacy
@@ -30,6 +29,7 @@ Dependencies
 ------------
 
 none
+
 
 Example Playbook
 ----------------
