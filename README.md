@@ -1,4 +1,4 @@
-ginhouxnet.resolv
+Ansible Role : dginhoux.resolv
 =========
 
 This ansible role configure DNS resolver.
