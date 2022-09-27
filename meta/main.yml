@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   role_name: resolv
-  description: configure dns resolver
+  description: dginhoux.resolv
   author: Dany GINHOUX
   company: dginhoux
   license: MIT
@@ -23,6 +23,7 @@ galaxy_info:
         - "8"
   galaxy_tags:
     - resolver
+    - systemd-resolvd
     - dns
     - nameserver
 
