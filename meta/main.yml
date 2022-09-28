@@ -1,7 +1,9 @@
 ---
 galaxy_info:
   role_name: resolv
-  description: dginhoux.resolv
+  description: |
+    This ansible role configure DNS resolver. 
+    It can be used to configure both legacy `/etc/resolv.conf` or `systemd-resolvd`.
   author: Dany GINHOUX
   company: dginhoux
   license: MIT
