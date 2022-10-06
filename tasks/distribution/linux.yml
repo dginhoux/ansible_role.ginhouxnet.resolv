@@ -5,7 +5,7 @@
   when: ansible_service_mgr != "systemd"
 
 - name: get existing /etc/resolv.conf file info
-  ansible.builtin.ansible.builtin.stat:
+  ansible.builtin.stat:
     path: /etc/resolv.conf
   register: sym
 
