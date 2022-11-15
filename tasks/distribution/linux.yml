@@ -1,16 +1,19 @@
 ---
-# force legacy mode if not using systemd
-- ansible.builtin.set_fact:
+- name: Force legacy mode if not using systemd
+  ansible.builtin.set_fact:
     resolv_mode: legacy
   when: ansible_service_mgr != "systemd"
 
-- name: get existing /etc/resolv.conf file info
+- name: Get existing /etc/resolv.conf file info
   ansible.builtin.stat:
     path: /etc/resolv.conf
   register: sym
 
-- block:
-    - name: disbale systemd-resolved
+
+- name: Legacy mode
+  when: resolv_mode == "legacy"
+  block:
+    - name: Disbale systemd-resolved
       ansible.builtin.systemd:
         name: systemd-resolved.service
         state: stopped
@@ -20,47 +23,49 @@
         masked: true
       when: ansible_service_mgr == "systemd"
 
-    - name: delete existing /etc/resolv.conf link
+    - name: Delete existing /etc/resolv.conf link
       ansible.builtin.file:
         path: /etc/resolv.conf
         state: absent
         force: true
       when: sym.stat.islnk is defined and sym.stat.islnk
 
-    - name: create legacy /etc/resolv.conf file
+    - name: Create legacy /etc/resolv.conf file
       ansible.builtin.template:
         src: resolv.conf.j2
         dest: /etc/resolv.conf
-        mode: 0644
+        mode: "0644"
         owner: root
         group: root
-  when: resolv_mode == "legacy"
 
-- block:
-    - name: create systemd-resolved drop-in dir
+
+- name: Resolved mode
+  when: resolv_mode == "resolved"
+  block:
+    - name: Create systemd-resolved drop-in dir
       ansible.builtin.file:
         path: /etc/systemd/resolved.conf.d
         state: directory
-        mode: 0755
+        mode: "0755"
         owner: root
         group: root
 
-    - name: create systemd-resolved config file
+    - name: Create systemd-resolved config file
       ansible.builtin.template:
         src: resolved.conf.j2
         dest: /etc/systemd/resolved.conf.d/resolved.conf
-        mode: 0644
+        mode: "0644"
         owner: root
         group: root
 
-    - name: delete legacy /etc/resolv.conf file
+    - name: Delete legacy /etc/resolv.conf file
       ansible.builtin.file:
         path: /etc/resolv.conf
         state: absent
         force: true
       when: sym.stat.isreg is defined and sym.stat.isreg
 
-    - name: enable systemd-resolved.service
+    - name: Enable systemd-resolved.service
       ansible.builtin.systemd:
         name: systemd-resolved.service
         state: started
@@ -70,7 +75,7 @@
         masked: false
       when: ansible_service_mgr == "systemd"
 
-    - name: create symlink /etc/resolv.conf to /run/systemd/resolve/resolv.conf
+    - name: Create symlink /etc/resolv.conf to /run/systemd/resolve/resolv.conf
       ansible.builtin.file:
         src: /run/systemd/resolve/resolv.conf
         dest: /etc/resolv.conf
@@ -78,11 +83,10 @@
         group: root
         state: link
 
-    - name: restart systemd-resolved
+    - name: Restart systemd-resolved
       ansible.builtin.systemd:
         name: systemd-resolved.service
         state: restarted
         force: true
         daemon_reload: true
       when: ansible_service_mgr == "systemd"
-  when: resolv_mode == "resolved"
