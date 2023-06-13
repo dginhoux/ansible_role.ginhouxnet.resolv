@@ -2,7 +2,7 @@
 galaxy_info:
   role_name: resolv
   description: |
-    This ansible role configure DNS resolver. 
+    This ansible role configure DNS resolver.
     It can be used to configure both legacy `/etc/resolv.conf` or `systemd-resolvd`.
   author: Dany GINHOUX
   company: dginhoux
@@ -27,7 +27,8 @@ galaxy_info:
         - "8"
   galaxy_tags:
     - resolver
-    - systemd-resolvd
+    - resolvd
+    - systemd
     - dns
     - nameserver
 
