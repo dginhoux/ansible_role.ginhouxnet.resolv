@@ -49,10 +49,12 @@ git clone https://github.com/dginhoux/ansible_role.resolv dginhoux.resolv
 
 #### EXAMPLE PLAYBOOK
 
+
 ```yaml
-- hosts: all
-  roles:
-    - name: start role dginhoux.resolv
+- name: Playbook
+  hosts: all
+  tasks:
+    - name: Start role dginhoux.resolv
       ansible.builtin.include_role:
         name: dginhoux.resolv
 ```
@@ -62,7 +64,9 @@ git clone https://github.com/dginhoux/ansible_role.resolv dginhoux.resolv
 
 #### DEFAULT VARIABLES
 
-Defaults variables defined in `defaults/main.yml` : 
+Defaults variables defined in `defaults/main.yml`
+
+#### EXAMPLES VARIABLES
 
 ```yaml
 resolv_mode: legacy
